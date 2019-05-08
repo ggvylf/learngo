@@ -30,7 +30,7 @@ func main() {
 			lock.Lock()
 			//如果有信就等待
 			for mailbox == 1 {
-				log.Printf("sender [%d]: sender is waiting", i)
+				log.Printf("sender [%d]: sender is waiting", i)ll
 				//等待通知
 				sendCond.Wait()
 
