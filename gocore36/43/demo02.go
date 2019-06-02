@@ -15,6 +15,8 @@ func main() {
 	basicReader := strings.NewReader(comment)
 	fmt.Printf("The size of basic reader: %d\n", basicReader.Size())
 
+
+	fmt.Println("NewReaderSize 300byte")
 	size := 300
 	fmt.Printf("New a buffered reader with size %d ...\n", size)
 	reader1 := bufio.NewReaderSize(basicReader, size)
