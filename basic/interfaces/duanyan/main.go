@@ -16,6 +16,7 @@ func Test(a interface{}) {
 
 func testType(items ...interface{}) {
 	for _, v := range items {
+		//使用switch case来进行类型的判断
 		switch v.(type) {
 		case int, int32, int64:
 			fmt.Println("int")
