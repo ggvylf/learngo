@@ -45,12 +45,15 @@ func BufReadAll() {
 		//判断是否读取到文件末尾
 		if err == io.EOF {
 			fmt.Println("已读到文件末尾")
+			fmt.Printf("读取到的内容为： %s\n", line)
+
 		}
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		fmt.Printf("读取到的内容为： %s\n", line)
+
 	}
 
 }

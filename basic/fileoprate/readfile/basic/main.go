@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 )
 
@@ -30,7 +31,7 @@ func ReadFile() {
 }
 
 func ReadAll() {
-	//打开文件
+	//只读方式打开文件
 	file, err := os.Open("./a.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -60,8 +61,20 @@ func ReadAll() {
 
 }
 
+//使用ioutil来读取文件，注意会读取全部文件，读取大文件不要用这种方法。s
+func ReadIoutil(file string) {
+	content, err := ioutil.ReadFile(file)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(content))
+
+}
+
 func main() {
-	// ReadFile()
+	ReadFile()
 	ReadAll()
+	ReadIoutil("./a.txt")
 
 }
