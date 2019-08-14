@@ -89,9 +89,34 @@ func ReflectIsNil() {
 }
 
 func ReflectIsValid() {
-	//判断变量持有的值中是否有某个字段
-a:
-	+[]string{"hello"}
+	type Person struct {
+		Name string
+		Age  int
+	}
+
+	p1 := Person{"tom", 11}
+	//IsValid()判断返回值是否有效
+	//FieldByName()判断struct中是否存在名称为Name的字段。
+	if reflect.ValueOf(p1).FieldByName("Name").IsValid() {
+		fmt.Println("存在字段Name")
+	}
+
+	//判断是否存在某个方法
+	p2 := struct{}{}
+	if reflect.ValueOf(p2).MethodByName("abc").IsValid() {
+		fmt.Println("存在acb方法")
+	} else {
+		fmt.Println("不存在acb方法")
+	}
+
+	//判断map中是否存在key
+	k1 := map[int]int{1: 11, 2: 22, 3: 33}
+	//这里要把int类型的转换为Value类型
+	if reflect.ValueOf(k1).MapIndex(reflect.ValueOf(4)).IsValid() {
+		fmt.Println("index为4的元素存在")
+	} else {
+		fmt.Println("index为4的元素不存在")
+	}
 }
 func main() {
 	GetType()
