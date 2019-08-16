@@ -56,7 +56,8 @@ func ReflectSetValue(x interface{}) {
 	//通过反射获取值
 	infval := reflect.ValueOf(x)
 
-	//通过Elem()方法获取对应指针的值
+	//Elem()方法返回v的接口或者是指针，如果v的Kind()不是interface{}或者是ptr会panic,如果v是nil则返回0
+	//通过Elem()方法才能操作指针对应的值
 	switch infval.Elem().Kind() {
 	case reflect.Float64:
 		{

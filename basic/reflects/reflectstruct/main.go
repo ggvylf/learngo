@@ -11,7 +11,7 @@ type Student struct {
 }
 
 func (s Student) Study(a, b int) {
-	str := "is study"
+	str := "&"  "is study"
 	fmt.Println(str)
 	fmt.Println(a + b)
 
@@ -32,19 +32,20 @@ func PrintMethod(x interface{}) {
 	//遍历所有的方法名称和类型，这里要使用值的反射，才能获取到具体的方法来调用
 	for i := 0; i < xvalue.NumMethod(); i++ {
 		methodtype := xvalue.Method(i).Type()
-		fmt.Printf("结构体中方法的名称=%v，方法的类型=%v\n", xtype.Method(i).Name, methodtype)
+		fmt.Printf("结构体中第%d个方法的名称=%v，方法的类型=%v\n", i, xtype.Method(i).Name, methodtype)
 
 	}
 
-	args := []reflect.Value{}
-	strargs := []reflect.Value{}
+	//创建一个类型是reflect.Value的素组，存放调用的参数
+	var args = []reflect.Value{}
+	var strargs = []reflect.Value{}
 	args = append(args, reflect.ValueOf(1))
-	args = append(args, reflect.ValueOf(3))
+	args = append(args, reflect.ValueOf(2))
 	strargs = append(strargs, reflect.ValueOf("2"))
 	strargs = append(strargs, reflect.ValueOf("4"))
 	//调用方法
-	xvalue.Elem().Method(0).Call(args)
-	xvalue.Elem().Method(1).Call(strargs)
+	xvalue.Elem().Method(0).Call(strargs)
+	xvalue.Elem().Method(1).Call(args)
 
 }
 
@@ -68,6 +69,7 @@ func main() {
 	s1score, _ := stureftype.FieldByName("Score")
 	fmt.Println("s1的Score字段=", s1score)
 
-	PrintMethod(s1)
+	//注意这里要传递指针
+	PrintMethod(&s1)
 
 }
