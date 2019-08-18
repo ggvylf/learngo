@@ -8,8 +8,12 @@ import (
 	"time"
 )
 
+//互斥锁
 var lock sync.Mutex
+
+//读写锁
 var rwlock sync.RWMutex
+var wg sync.WaitGroup
 
 //互斥所
 func testMutex() {
@@ -18,19 +22,18 @@ func testMutex() {
 	a[2] = 10
 
 	for i := 0; i < 2; i++ {
+		wg.Add(1)
 		go func(b map[int]int) {
 			lock.Lock()
 			b[2] = rand.Intn(100)
 			lock.Unlock()
+			wg.Done()
 		}(a)
+
 	}
 
-	lock.Lock()
-	fmt.Println(a)
-
-	lock.Unlock()
-
-	time.Sleep(time.Second)
+	wg.Wait()
+	fmt.Println("变更以后的值", a)
 
 }
 
@@ -46,7 +49,6 @@ func testRwmutex() {
 		go func(b map[int]int) {
 			rwlock.Lock()
 			b[2] = rand.Intn(100)
-			time.Sleep(10 * time.Microsecond)
 			rwlock.Unlock()
 		}(a)
 	}
@@ -79,6 +81,6 @@ func testRwmutex() {
 }
 
 func main() {
-	// testMutex()
+	testMutex()
 	testRwmutex()
 }
