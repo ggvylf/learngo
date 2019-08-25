@@ -11,16 +11,18 @@ var lock sync.RWMutex
 
 func add(i int) {
 	lock.Lock()
+	defer lock.Unlock()
 	x[1] = i
 	fmt.Println("x[1]=", x[1])
-	lock.Unlock()
+
 	wg.Done()
 }
 
 func read() {
 	lock.RLock()
+	defer lock.RUnlock()
 	fmt.Println(x)
-	lock.RUnlock()
+
 	wg.Done()
 }
 
