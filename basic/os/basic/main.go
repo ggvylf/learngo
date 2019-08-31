@@ -30,12 +30,28 @@ func getfilestat() {
 	fmt.Println("文件权限=", stat.Mode())
 	fmt.Println("文件的最后修改时间=", stat.ModTime())
 	fmt.Println("文件大小=", stat.Size())
-	fmt.Println("文件的系统参数=", stat.Sys())
+	fmt.Println("文件退出的系统参数=", stat.Sys())
 
+}
+
+func gethostname() {
+	//获取主机名
+	hostname, err := os.Hostname()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("主机名=", hostname)
+}
+
+func gettempdir() {
+	fmt.Println("系统的临时文件夹=", os.TempDir())
 }
 
 func main() {
 	getdirs()
 	getenv()
 	getfilestat()
+	gethostname()
+	gettempdir()
 }
