@@ -86,7 +86,13 @@ func ParseTime() {
 	fmt.Println("解析结果=", t)
 }
 
+func SetTime() {
+	date := time.Date(1998, 1, 2, 3, 4, 5, 6, time.Now().Location())
+	fmt.Println("设定的时间=", date)
+}
+
 func main() {
+	SetTime()
 	CurrentTime()
 	ShowTime()
 	TimeStamps()

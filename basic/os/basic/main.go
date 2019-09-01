@@ -22,6 +22,12 @@ func getenv() {
 
 }
 
+func ispathseparator() {
+	//判断某个字符是否是路径分隔符
+	fmt.Println(os.IsPathSeparator('\\'))
+
+}
+
 func getfilestat() {
 	filename := "./main.go"
 	stat, _ := os.Stat(filename)
@@ -29,6 +35,7 @@ func getfilestat() {
 	fmt.Println("是否为目录=", stat.IsDir())
 	fmt.Println("文件权限=", stat.Mode())
 	fmt.Println("文件的最后修改时间=", stat.ModTime())
+	//文件大小，单位是字节byte
 	fmt.Println("文件大小=", stat.Size())
 	fmt.Println("文件退出的系统参数=", stat.Sys())
 
@@ -54,4 +61,5 @@ func main() {
 	getfilestat()
 	gethostname()
 	gettempdir()
+	ispathseparator()
 }

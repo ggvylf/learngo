@@ -8,9 +8,12 @@ import (
 func AddTime() {
 	//时间+时间间隔
 	t := time.Now()
+	t1, _ := time.ParseDuration("+3h")
 	t2 := t.Add(time.Hour)
+	t3 := t.Add(t1)
 	fmt.Println("当前时间t=", t)
 	fmt.Println("增加一小时后，t2=", t2)
+	fmt.Println("增加3小时后，t3=", t3)
 }
 
 func SubTime() {
