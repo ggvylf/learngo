@@ -79,6 +79,34 @@ func trim() {
 }
 
 func split() {
+	//指定空为分隔符
+	strs := strings.Split("hello world i love you", " ")
+	fmt.Printf("strs的类型是%T,内容=%s,长度=%d\n", strs, strs, len(strs))
+
+	//指定空格为分隔符，分割为3段，-1表示全部分割
+	strs = strings.SplitN("hello world i love you", " ", 3)
+	fmt.Printf("strs的类型是%T,内容=%s,长度=%d\n", strs, strs, len(strs))
+	for k, v := range strs {
+		fmt.Printf("str[%d]=%s\n", k, v)
+	}
+
+	//包含分隔符
+	strs = strings.SplitAfter("hello,world,i,love,you", ",")
+	fmt.Printf("strs的类型是%T,内容=%s,长度=%d\n", strs, strs, len(strs))
+
+	//包含分隔符,分割为制定的段数
+	strs = strings.SplitAfterN("hello,world,i,love,you", ",", 3)
+	fmt.Printf("strs的类型是%T,内容=%s,长度=%d\n", strs, strs, len(strs))
+	for k, v := range strs {
+		fmt.Printf("str[%d]=%s\n", k, v)
+	}
+
+}
+
+func join() {
+	strs := []string{"hello", "world", "i", "love", "you"}
+	newstrs := strings.Join(strs, "#")
+	fmt.Println(newstrs)
 
 }
 
@@ -88,4 +116,5 @@ func main() {
 	upperlower()
 	trim()
 	split()
+	join()
 }
