@@ -61,12 +61,21 @@ func upperlower() {
 	fmt.Println("abc的首字母大写=", strings.Title("abc"))
 }
 
+func filter(char rune) bool {
+	if char == 'c' || char == 'b' {
+		return true
+	} else {
+		return false
+	}
+}
 func trim() {
 	fmt.Println("去掉头尾空格=", strings.TrimSpace(" abc "))
 	fmt.Println("去掉abc中前缀为a的字符=", strings.TrimPrefix("abc", "a"))
 	fmt.Println("去掉abc中后缀为c的字符=", strings.TrimSuffix("abc", "c"))
-
 	fmt.Println("去掉头尾包含a或c字符的内容=", strings.Trim("abc abc abc", "ab"))
+
+	//filter函数返回true表示要进行trim操作，返回false表示不进行
+	fmt.Println("使用trimfunc去掉头尾符合条件的字符=", strings.TrimFunc("bvabc abc abc", filter))
 }
 
 func split() {
