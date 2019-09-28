@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"math"
+	"os"
+	"strconv"
 )
 
 func area(r float64) float64 {
@@ -19,7 +21,9 @@ func main() {
 		}
 	}()
 
-	res := area(float64(-3))
+	r, _ := strconv.Atoi(os.Args[1])
+
+	res := area(float64(r))
 
 	fmt.Println("面积=", res)
 }
