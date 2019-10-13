@@ -16,7 +16,7 @@ const form = `<html><body><form action="#" method="post" name="bar">
 func Hello(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "hello world/n")
 	//人为painc
-	panic("this is panic test")
+	panic("this is panicsanderrors test")
 }
 
 func Form(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +38,7 @@ func logPanic(handle http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if x := recover(); x != nil {
-				log.Printf("[%v]caught panic:%v", r.RemoteAddr, x)
+				log.Printf("[%v]caught panicsanderrors:%v", r.RemoteAddr, x)
 			}
 		}()
 		handle(w, r)
