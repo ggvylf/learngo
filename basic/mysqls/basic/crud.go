@@ -3,17 +3,18 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
 type Person struct {
-	Name     string  `db:"name"`
-	Age      int     `db:"age"`
-	Money    float64 `db:"rmb"`
-	Gender   bool    `db："gender"`
-	Birthday string  `db："birthday"`
+	Name     string    `db:"name"`
+	Age      int       `db:"age"`
+	Money    float64   `db:"rmb"`
+	Gender   bool      `db："gender"`
+	Birthday time.Time `db："birthday"`
 }
 
 func insert() {
@@ -55,6 +56,14 @@ func delete() {
 }
 
 func selects() {
+	var ps []Person
+	err := Db.Select(&ps, "select name,age,rmb from person")
+	// err := Db.Select(&ps, "select name,age,rmb from person where name like ?", "%peter%")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("查询成功！", ps)
 
 }
 
@@ -72,7 +81,8 @@ func init() {
 
 func main() {
 	defer Db.Close()
-	insert()
-	update()
+	// insert()
+	// update()
 	//delete()
+	selects()
 }
