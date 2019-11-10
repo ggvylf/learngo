@@ -3,53 +3,40 @@ package main
 import (
 	"fmt"
 	"runtime"
-	"sync"
+	"time"
 )
 
-//全局声明
-var wg sync.WaitGroup
+func newTask(i int) {
+	if i == 5 {
+		//出让资源，调整当前goroutine优先级
+		runtime.Gosched()
+	}
 
-func hello() {
-	fmt.Println("hello world")
-	//计数器-1
-	wg.Done()
-}
+	if i == 9 {
+		//查看当前的逻辑cpu个数
+		sum := runtime.NumCPU()
+		//指定goroutine可用的最大核心数，并返回上一次的配置
+		runtime.GOMAXPROCS(sum)
+	}
 
-func hello2() {
-	fmt.Println("hello world2")
-	//计数器-1
-	wg.Done()
+	if i == 3 {
+		defer fmt.Printf("the %d goroutine is exit\n", i)
+		runtime.Goexit()
+		fmt.Println("after exit")
+	}
+	for j := 0; j < 10; j++ {
+		fmt.Printf("im %d task1:%d\n", i, j)
+	}
+
 }
 
 func main() {
-	//制定P的个
-	runtime.GOMAXPROCS(1)
-
-	//计数器+1
-	wg.Add(1)
-	//使用go关键字开启goroutine
-	go hello()
-
-	//开启多个goroutine
-	for i := 0; i < 5; i++ {
-		wg.Add(1)
-		go hello2()
-
-	}
-
-	//匿名函数
-	//注意闭包传参的问题
+	fmt.Println("main fun start")
 	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go func(i int) {
-
-			fmt.Println("hello =", i)
-			wg.Done()
-		}(i)
+		go newTask(i)
+		// go newTask2(i)
 	}
-
-	fmt.Println("hello main func")
-	//等待计数器为空后结束
-	wg.Wait()
+	time.Sleep(5 * time.Second)
+	fmt.Println("main func end")
 
 }
