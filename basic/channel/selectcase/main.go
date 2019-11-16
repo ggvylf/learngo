@@ -2,23 +2,31 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
-	ch1 := make(chan int, 100)
 
-	for i := 0; i < 100; i++ {
+	chanA := make(chan int, 5)
+	chanB := make(chan int, 4)
+	chanC := make(chan int, 4)
 
+OUTER:
+	for {
 		select {
-		//当case满足多个时候，会随机选一个case执行
-		case x := <-ch1:
-			fmt.Println("output", x)
-
-		case ch1 <- i:
-			fmt.Println("input", i)
-
+		case chanA <- 1:
+			fmt.Println("　write to chanA")
+		case chanB <- 1:
+			fmt.Println("　write to chanB")
+		case chanC <- 1:
+			fmt.Println("　write to chanC")
 		default:
-			fmt.Println("do nothing")
+			fmt.Println("all tatsk end")
+			break OUTER
 		}
 	}
+
+	time.Sleep(5 * time.Second)
+
+	fmt.Println("main func end")
 }
