@@ -5,17 +5,22 @@ import (
 	"sync"
 )
 
-var x int = 10
+var x int = 0
 var wg sync.WaitGroup
 var lock sync.Mutex
 
 func add(i int) {
 	lock.Lock()
-	defer lock.Unlock()
-	x = i + 1
+	fmt.Printf("the %d goruotine is locked\n", i)
+
+	x += 1
 
 	wg.Done()
-	fmt.Printf("the %d times in func x=%d\n", i, x)
+	fmt.Printf("the %d gorutine is working, the x=%d\n", i, x)
+
+	fmt.Printf("the %d goruotine is unlocked\n", i)
+	lock.Unlock()
+
 }
 
 func main() {
@@ -25,5 +30,6 @@ func main() {
 	}
 
 	wg.Wait()
+
 	fmt.Println("in func main x=", x)
 }
