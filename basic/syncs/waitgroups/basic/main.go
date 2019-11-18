@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+//普通的结构体，如果要传到func中，传地址
 var wg sync.WaitGroup
 
 func main() {
