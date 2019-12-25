@@ -7,14 +7,14 @@ import (
 )
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
-	//解析模板
+	//打开模板
 	t, err := template.ParseFiles("./hello.tmpl")
 	if err != nil {
 		fmt.Println("template parse failed,err=", err)
 		return
 	}
 
-	//渲染
+	//渲染模板
 	str := "World"
 	err = t.Execute(w, str)
 	if err != nil {
