@@ -4,8 +4,35 @@
 <title>Hello Page</title>
     </head>
     <body>
-    <!-- 表示go传递过来的变量 -->
-        <p>name= {{ .Name }}</p>
-        <p>age= {{ .Age }}</p>
+        <!-- 表示go传递过来的变量 -->
+        <p>person1</p>
+        <p>person1.name= {{ .person1.Name }}</p>
+        <p>person1.age= {{ .person1.Age }}</p>
+        <p>person2</p>
+        <p>person2.name= {{ .person2.name }}</p>
+        <p>person2.age= {{ .person2.age }}</p>
+        
+        <!-- 变量 -->
+        <hr>
+        {{ $aaa := 3 }}
+        {{ $bbb :=  .person1.Age }}
+        
+        <!-- 移除左边或右边的空白字符 -->
+        <p> person1.name=    {{- .person1.Name }} </p>
+        <p> person1.name= {{- .person1.Name -}} </p>
+
+        <!-- 判断 -->
+        <hr>
+        {{ if $aaa}}
+            {{ $aaa}}
+        {{else}}
+            {{ $bbb}}
+        {{end}}
+        <hr>
+        {{if $aaa }}
+            {{ $aaa}}
+        
+
+
     </body>
 </html>

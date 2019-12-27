@@ -12,13 +12,22 @@ type Person struct {
 }
 
 func sayStruct(w http.ResponseWriter, r *http.Request) {
-	person := &Person{"tom", 18}
+	person1 := &Person{"tom", 18}
+	person2 := map[string]interface{}{
+		"name": "jerry",
+		"age":  13,
+	}
+
+	users := map[string]interface{}{
+		"person1": person1,
+		"person2": person2,
+	}
 	tmpl, err := template.ParseFiles("./struct.tmpl")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	tmpl.Execute(w, person)
+	tmpl.Execute(w, users)
 
 }
 
