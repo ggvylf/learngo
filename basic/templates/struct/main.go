@@ -18,9 +18,12 @@ func sayStruct(w http.ResponseWriter, r *http.Request) {
 		"age":  13,
 	}
 
+	hobby := []string{"aaaa", "bbbb", "cccc"}
+
 	users := map[string]interface{}{
 		"person1": person1,
 		"person2": person2,
+		"hobby":   hobby,
 	}
 	tmpl, err := template.ParseFiles("./struct.tmpl")
 	if err != nil {

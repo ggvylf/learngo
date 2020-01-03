@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-<title>Hello Page</title>
+        <title>Hello Page</title>
     </head>
     <body>
         <!-- 表示go传递过来的变量 -->
@@ -23,16 +23,28 @@
 
         <!-- 判断 -->
         <hr>
-        {{ if $aaa}}
-            {{ $aaa}}
+         {{ if $aaa }}
+            {{ $aaa }}
         {{else}}
             {{ $bbb}}
         {{end}}
         <hr>
-        {{if $aaa }}
-            {{ $aaa}}
-        
-
-
+        {{ if gt .person1.Age 3}}
+            tom的年龄大于3
+        {{else}}
+            tom的年龄小于3
+        {{end}}
+        <hr>
+        <!--  遍历 -->
+         {{ range $index,$hobby:=.hobby}}
+         <p>{{ $index }}---- {{ $hobby }}</p>
+        {{end}}
+        <hr>
+        <!-- with封装 -->
+        {{with .person1}}
+        <p>{{.Name}}</p>
+        <p>{{.Age}}</p>
+        {{end}}
+        <hr>
     </body>
 </html>
