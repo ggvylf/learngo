@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>test template nest</title>
+</head>
+<body>
+<!-- 调用mylen函数 -->
+
+<p>name= {{ . }}</p>
+<hr>
+<!-- 嵌套外部模板文件 -->
+{{ template "my1.tmpl"}}
+<hr>
+<!-- 嵌套文件中define的模板 -->
+{{ template "my2.tmpl"}}
+</body>
+</html>
+
+<!-- 通过define来定义一个template -->
+{{ define "my2.tmpl" }}
+<m2>
+    <li>my2 hehe</li>
+    <li>my2 xixi</li>
+    <li>my2 haha</li>
+</m2>
+{{end}}

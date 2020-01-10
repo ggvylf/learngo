@@ -7,18 +7,28 @@ import (
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
+	//自定义一个函数
 	mylen := func(a string) (int, error) {
-		s
 		return len(a), nil
 	}
 
-	t, err := template.New("mytmpl.tmpls").ParseFiles("./mytmpl.tmpl")
+	//初始化模板
+	t := template.New("mytmpl.tmpl")
 
+	//添加自定义函数
+	t.Funcs(template.FuncMap{
+		"mylen": mylen,
+	})
+
+	//解析模板
+	_, err := t.ParseFiles("./mytmpl.tmpl")
 	if err != nil {
-		fmt.Println("parse new template failed!,err=", err)
+		fmt.Println("parse template file failed,err=", err)
 		return
 	}
+
 	name := "tom"
+	//渲染模板
 	t.Execute(w, name)
 }
 
