@@ -7,6 +7,7 @@ import (
 )
 
 func mydelies(w http.ResponseWriter, h *http.Request) {
+	//定义新的标识符
 	t, err := template.New("base.tmpl").Delims("{[", "]}").ParseFiles("./base.tmpl")
 	if err != nil {
 		fmt.Println("err=", err)
