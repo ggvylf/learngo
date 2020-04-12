@@ -50,7 +50,7 @@ func main() {
 		}
 	})
 
-	//group route
+	//group route 支持多级嵌套
 	video := r.Group("/video")
 	{
 		video.GET("/login", func(c *gin.Context) {

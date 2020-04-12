@@ -1,3 +1,5 @@
+//参数绑定用来获取请求中的参数，可以自动提取json form表单，xml等中的参数,可以方便的放入struct中
+
 package main
 
 import (
