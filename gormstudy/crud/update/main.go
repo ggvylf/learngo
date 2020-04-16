@@ -9,8 +9,7 @@ import (
 
 //定义数据模型
 type User struct {
-	ID int64
-
+	ID   int64
 	Name string `gorm:"default:'noname'"`
 	Age  int64
 }
@@ -28,16 +27,11 @@ func main() {
 	db.AutoMigrate(&User{})
 
 	//创建数据
-	u1 := User{Name: "tom", Age: 18}
+	user := User{Name: "tom", Age: 18}
 
-	u2 := User{Age: 33}
+	db.Model(&user).Update("name", "jerry")
 
-	//创建数据s
-	//判断主键是否为空，true表示为空，false表示已经存在
-	fmt.Println("创建前主键的状态=", db.NewRecord(u1))
-	db.Create(&u1)
-	fmt.Println("创建后主键的状态=", db.NewRecord(u1))
-
-	db.Create(&u2)
+	db.First(&user)
+	fmt.Println(user)
 
 }
