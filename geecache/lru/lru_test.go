@@ -36,7 +36,7 @@ func TestRemovedoldest(t *testing.T) {
 	lru.Add(k2, String(v2))
 	lru.Add(k3, String(v3))
 
-	if _, ok := lru.Get("key1"); !ok || lru.Len() != 2 {
+	if _, ok := lru.Get("key1"); ok || lru.Len() != 2 {
 		t.Fatalf("Removeoldest key1 failed")
 	}
 }
@@ -44,21 +44,20 @@ func TestRemovedoldest(t *testing.T) {
 //测试回调
 func TestOnEvicted(t *testing.T) {
 	keys := make([]string, 0)
-	callbackk := func(key string, value Value) {
+	callback := func(key string, value Value) {
 		keys = append(keys, key)
 	}
-	lru := New(int64(0), callbackk)
+	lru := New(int64(10), callback)
 	lru.Add("key1", String("123456"))
-	lru.Add("key2", String("k2"))
-	lru.Add("key3", String("k3"))
-	lru.Add("key4", String("k3"))
-	lru.Add("key5", String("k3"))
+	lru.Add("k2", String("k2"))
+	lru.Add("k3", String("k3"))
+	lru.Add("k4", String("k4"))
 
 	expect := []string{"key1", "k2"}
-	if !reflect.DeepEqual(expect, keys) {
-		t.Fatalf("call onEvicted failed,expect keys equals to %s", expect)
-	}
 
+	if !reflect.DeepEqual(expect, keys) {
+		t.Fatalf("Call OnEvicted failed, expect keys equals to %s", expect)
+	}
 }
 
 //测试Add
