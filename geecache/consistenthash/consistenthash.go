@@ -42,7 +42,7 @@ func New(replicas int, fn Hash) *Map {
 func (m *Map) Add(keys ...string) {
 	//对每个真实的节点，创建虚拟节点，
 	for _, key := range keys {
-			
+
 		for i := 0; i < m.replicas; i++ {
 			//创建虚拟节点，虚拟节点的名字=真实节点节个数+真实节点
 			hash := int(m.hash([]byte(strconv.Itoa(i) + key)))
@@ -59,7 +59,6 @@ func (m *Map) Add(keys ...string) {
 	}
 }
 
-
 //选择真实节点
 func (m *Map) Get(key string) string {
 	//hash环长度为0，返回空
@@ -68,16 +67,14 @@ func (m *Map) Get(key string) string {
 	}
 
 	//计算key的hash值
-	hash:=int(m.hash([]byte(key)))
-
+	hash := int(m.hash([]byte(key)))
 
 	//顺时针获取第一个虚拟节点的index。如果idx==len(m.keys)，应该选择m.keys[0]
-	idx:=sort.Search(len(m.keys),func(i int) bool) {
+	idx := sort.Search(len(m.keys), func(i int) bool {
 
-		return m.keys[i]>=hash
-	}
+		return m.keys[i] >= hash
+	})
 
 	//通过虚拟节点映射到真实节点
 	return m.hashMap[m.keys[idx%len(m.keys)]]
 }
-
