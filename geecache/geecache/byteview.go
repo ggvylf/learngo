@@ -1,13 +1,16 @@
 package geecache
 
+//存储真实的缓存值
 type ByteView struct {
 	b []byte
 }
 
+//实现Value接口的
 func (v ByteView) Len() int {
 	return len(v.b)
 }
 
+//返回的是拷贝
 func (v ByteView) ByteSlice() []byte {
 	return cloneBytes(v.b)
 }

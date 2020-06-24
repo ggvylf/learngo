@@ -6,23 +6,25 @@ import (
 	"strconv"
 )
 
-//自定义hash类型
+//自定义函数类型Hash，方便自定义或者是替换别的hash函数，默认使用crc32.ChecksumIEEE算法
 type Hash func(data []byte) uint32
 
-//一致性hash的数据结果
+//一致性hash算法的数据借口
 type Map struct {
+	//自定义Hash函数
 	hash Hash
 
-	//虚拟节点个数
+	//虚拟节点的倍数
 	replicas int
 
 	//hash环
 	keys []int
 
-	//虚拟节点跟真是节点的映射表，key是虚拟节点的hash值，value是真是节点的名称
+	//虚拟节点跟真实节点的映射表，key是虚拟节点的hash值，value是真是节点的名称
 	hashMap map[int]string
 }
 
+//创建一个Map实例，允许自定义虚拟节点倍数和Hash函数
 func New(replicas int, fn Hash) *Map {
 	m := &Map{
 		replicas: replicas,
@@ -30,7 +32,9 @@ func New(replicas int, fn Hash) *Map {
 		hashMap:  make(map[int]string),
 	}
 
+	//自定义函数为空
 	if m.hash == nil {
+		//默认的hash算法
 		m.hash = crc32.ChecksumIEEE
 	}
 
@@ -40,11 +44,11 @@ func New(replicas int, fn Hash) *Map {
 
 //添加真实节点
 func (m *Map) Add(keys ...string) {
-	//对每个真实的节点，创建虚拟节点，
+	//对每个真实的节点，创建虚拟节点
 	for _, key := range keys {
 
 		for i := 0; i < m.replicas; i++ {
-			//创建虚拟节点，虚拟节点的名字=真实节点节个数+真实节点
+			//创建虚拟节点，虚拟节点的名字=真实节点节个数+真实节点key
 			hash := int(m.hash([]byte(strconv.Itoa(i) + key)))
 
 			//把虚拟节点添加到hash环上
@@ -69,12 +73,15 @@ func (m *Map) Get(key string) string {
 	//计算key的hash值
 	hash := int(m.hash([]byte(key)))
 
-	//顺时针获取第一个虚拟节点的index。如果idx==len(m.keys)，应该选择m.keys[0]
+	//顺时针获取第一个虚拟节点的index。
+	//如果idx==len(m.keys)，应该选择m.keys[0]
 	idx := sort.Search(len(m.keys), func(i int) bool {
 
+		//节点映射map表中值大于key的hash，就是虚拟节点的的hash
 		return m.keys[i] >= hash
 	})
 
-	//通过虚拟节点映射到真实节点
+	//通过节点映射表,找到虚拟节点对应的真实节点
+	//因为hash是个一个环状结构，所以通过取余的方式来处理。
 	return m.hashMap[m.keys[idx%len(m.keys)]]
 }

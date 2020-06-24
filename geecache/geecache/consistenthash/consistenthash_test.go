@@ -7,19 +7,21 @@ import (
 )
 
 func TestHashing(t *testing.T) {
-	//新建一个3个虚拟节点的hasn环
+	//新建一个3倍虚拟节点的hasn环，真实节点个数为3个，总计9个节点
+	//
 	hash := New(3, func(key []byte) uint32 {
 		i, _ := strconv.Atoi(string(key))
 		return uint32(i)
 	})
-	fmt.Println(hash)
 
-	// Given the above hash function, this will give replicas with "hashes":
-	// 2, 4, 6, 12, 14, 16, 22, 24, 26
+	//添加真实节点到hash环
+	//hash环上的节点：
+	// 02/12/22、04/14/24、06/16/26
 	hash.Add("6", "4", "2")
-	fmt.Println(hash)
 
+	//数字和对应的hash节点
 	testCases := map[string]string{
+
 		"2":  "2",
 		"11": "2",
 		"23": "4",
@@ -32,10 +34,13 @@ func TestHashing(t *testing.T) {
 		}
 	}
 
-	// Adds 8, 18, 28
+	// 增加一个真实节点8
+	//hash环上的节点：
+	// 02/12/22、04/14/24、06/16/26 08/18/28
 	hash.Add("8")
+	fmt.Println(hash)
 
-	// 27 should now map to 8.
+	// 27对应的真实节点节点应该是8
 	testCases["27"] = "8"
 
 	for k, v := range testCases {

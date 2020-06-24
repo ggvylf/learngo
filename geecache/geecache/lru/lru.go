@@ -16,14 +16,15 @@ type Cache struct {
 	//缓存对象字典 k是string，v是对应节点的指针
 	cache map[string]*list.Element
 
-	//记录被删除的回调函数，可以为nil
+	//key被删除的回调函数，可以为nil
 	OnEvicted func(key string, value Value)
 }
 
-//双向列表中的节点数据类型
+//双向链表中节点的数据类型
 type entry struct {
 	key string
 	//占用内存大小
+	//值是实现了Value接口的任意类型。只要实现Len()方法即可
 	value Value
 }
 
@@ -42,24 +43,29 @@ func New(maxBytes int64, onEvicted func(string, Value)) *Cache {
 	}
 }
 
-//查找功能
+//查找key
+// 1. 先从map中找到对应链表的节点
+// 2. 把该节点移动到链表的尾部
 func (c *Cache) Get(key string) (value Value, ok bool) {
-	//判断key是否存在
+	//判断缓存链表中，key对应的节点是否存在，如果存在把节点赋值给ele
 	if ele, ok := c.cache[key]; ok {
 		//把ele移动到对尾
 		c.ll.MoveToFront(ele)
 
 		//拿到对应的kv
+		//类型断言，从空接口中获取指定类型的值，这里是*entry类型，包含了key和Value
 		kv := ele.Value.(*entry)
-		//返回kv的值
+		//返回kv中的value
 		return kv.value, true
 	}
+	//key不存在，直接返回
 	return
 }
 
-//移除　淘汰最旧的
+//移除key
+//缓存淘汰，把链表队首的节点移除
 func (c *Cache) RemoveOldest() {
-	//从ll中获取最后一个元素，nil表示ll为空
+	//从ll中获取最后一个元素，如果nil表示链表是空的
 	ele := c.ll.Back()
 
 	if ele != nil {
@@ -72,10 +78,10 @@ func (c *Cache) RemoveOldest() {
 		//从cache的map中删除kv
 		delete(c.cache, kv.key)
 
-		//cache的已使用大小=nbytes-(kv的长度+kv值的长度)
+		//cache的已使用大小=当前已使用的大小nbytes-(key的长度+value值的长度)
 		c.nbytes -= int64(len(kv.key)) + int64(kv.value.Len())
 
-		//回调函数不为nil，调用回调函数 把kv的key和value返回
+		//删除key后，如果回调函数不为nil，调用回调函数 把kv的key和value返回
 		if c.OnEvicted != nil {
 			c.OnEvicted(kv.key, kv.value)
 		}
@@ -86,7 +92,7 @@ func (c *Cache) RemoveOldest() {
 //添加和修改key
 func (c *Cache) Add(key string, value Value) {
 	//判断key是否存在
-	//key存在
+	//key存在，只要更新key的value和nbytes
 	if ele, ok := c.cache[key]; ok {
 		//移动key到队尾
 		c.ll.MoveToFront(ele)
@@ -94,7 +100,7 @@ func (c *Cache) Add(key string, value Value) {
 		//获取key对应的value
 		kv := ele.Value.(*entry)
 
-		//更新已分配的长度
+		//已使用的内存=当前已使用的内存+（新的value的长度-老value的长度）
 		c.nbytes += int64(value.Len()) - int64(kv.value.Len())
 
 		//更新对应key的value
@@ -108,11 +114,12 @@ func (c *Cache) Add(key string, value Value) {
 		c.cache[key] = ele
 
 		//调整已分配大小
-		//已分配大小+=key的长度+value的长度
+		//已分配大小=当前已分配的大小+key的长度+value的长度
 		c.nbytes += int64(len(key)) + int64(value.Len())
 	}
 
-	//如果已分配的空间大于设定的最大空间，则清理最少访问的key
+	//清理最少访问的key
+	//条件 c.maxbytes不为0 并且nbytes的大小超过maxBytes
 	for c.maxBytes != 0 && c.maxBytes < c.nbytes {
 		c.RemoveOldest()
 	}

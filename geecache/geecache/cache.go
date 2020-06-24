@@ -3,7 +3,7 @@ package geecache
 import (
 	"sync"
 
-	"github.com/ggvylf/learngo/geecache/lru"
+	"github.com/ggvylf/learngo/geecache/geecache/lru"
 )
 
 type cache struct {
@@ -12,6 +12,7 @@ type cache struct {
 	cacheBytes int64
 }
 
+//cache的add方法
 func (c *cache) add(key string, value ByteView) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -20,9 +21,12 @@ func (c *cache) add(key string, value ByteView) {
 	if c.lru == nil {
 		c.lru = lru.New(c.cacheBytes, nil)
 	}
+
+	//把key和value添加到c的链表中
 	c.lru.Add(key, value)
 }
 
+//cache的get方法
 func (c *cache) get(key string) (value ByteView, ok bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -32,7 +36,7 @@ func (c *cache) get(key string) (value ByteView, ok bool) {
 		return
 	}
 
-	//缓存有key的value
+	//key存在
 	if v, ok := c.lru.Get(key); ok {
 		//断言，制定返回ByteView类型
 		return v.(ByteView), ok
