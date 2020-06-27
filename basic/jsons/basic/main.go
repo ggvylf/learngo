@@ -18,6 +18,7 @@ func NewPerson(name string, age int) *Person {
 	}
 }
 
+//使用自定义方法来返回私有变量的值拷贝
 func (p *Person) GetAge() int {
 	return p.age
 }
@@ -43,7 +44,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(data))
+	fmt.Println("c1 json.marshal=", string(data))
 	fmt.Println()
 
 	//反序列化
@@ -53,6 +54,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(c2)
+	fmt.Println("c2 json.unmarshl=", c2)
 
 }

@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-//空接口，任意类型都实现了控借口
+//空接口，任意类型都实现了空借口
 type emptyinf interface{}
 
 //空接口作为函数的参数

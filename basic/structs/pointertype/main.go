@@ -31,8 +31,19 @@ func main() {
 	fmt.Println("p=",p)
 
 
-
+	//直接传入结构体的指针
 	f2(&p)
 	fmt.Println("p=",p)
+
+	//使用new()实例化struct，返回的是struct的只恨
+	p2:=new(Person)
+	fmt.Printf("p2 type=%T\n",p2)
+	p2.Name="jerry"
+	p2.Gender="male"
+	f2(p2)
+
+	fmt.Println("p2=",p2)
+
+
 
 }
