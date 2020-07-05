@@ -1,4 +1,0 @@
-helloworld
-abc
-hehe
-haha

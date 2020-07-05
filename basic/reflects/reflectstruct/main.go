@@ -11,7 +11,7 @@ type Student struct {
 }
 
 func (s Student) Study(a, b int) {
-	str := "&"  "is study"
+	str := "is study"
 	fmt.Println(str)
 	fmt.Println(a + b)
 
@@ -52,6 +52,7 @@ func PrintMethod(x interface{}) {
 func main() {
 	s1 := Student{"tom", 99}
 	stureftype := reflect.TypeOf(s1)
+	
 	//打印struct的名称和类型
 	fmt.Printf("struct的名称=%v,struct的类型=%v\n", stureftype.Name(), stureftype.Kind())
 

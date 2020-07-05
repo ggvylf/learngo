@@ -15,6 +15,7 @@ func main() {
 	bs := []byte{0}
 
 	//从文件开头光标偏移1个
+	//第一个参数是偏移量offset，第二个参数0表示从头开始，1表示当前光标的位置，2表示从文件末尾
 	file.Seek(1, 0)
 	file.Read(bs)
 	fmt.Println(string(bs))
