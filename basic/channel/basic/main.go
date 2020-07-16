@@ -5,11 +5,12 @@ import (
 	"time"
 )
 
+//无缓冲的chan
 func nobuf() {
-
 	//声明一个类型为int的chan
 	var ch1 chan int
-	//初始化无缓冲的chan
+
+	//初始化无缓冲的chan，注意必须初始化以后才能使用
 	ch1 = make(chan int)
 
 	//从chan中读取
@@ -17,10 +18,26 @@ func nobuf() {
 		v, ok := <-ch1
 		fmt.Println(v, ok)
 	}()
+
 	//数据写入chan
 	ch1 <- 22
+
 	//关闭chan
 	close(ch1)
+
+}
+
+//有缓冲的chan
+func withbuf() {
+	//声明并初始化，有缓冲，长度为10
+	ch2 := make(chan int, 10)
+
+	ch2 <- 1
+	ch2 <- 2
+
+	for i := 0; i <= len(ch2); i++ {
+		fmt.Println(<-ch2)
+	}
 
 }
 
@@ -55,18 +72,6 @@ func doubleclose() {
 	mychan := make(chan int)
 	close(mychan)
 	close(mychan)
-}
-func withbuf() {
-	//声明并初始化，有缓冲，长度为10
-	ch2 := make(chan int, 10)
-
-	ch2 <- 1
-	ch2 <- 2
-
-	for i := 0; i <= len(ch2); i++ {
-		fmt.Println(<-ch2)
-	}
-
 }
 
 func closesignal() {
