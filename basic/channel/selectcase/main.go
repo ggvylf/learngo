@@ -13,6 +13,7 @@ func main() {
 
 OUTER:
 	for {
+		//同时相应多个通道操作
 		select {
 		case chanA <- 1:
 			fmt.Println("　write to chanA")
