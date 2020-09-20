@@ -31,6 +31,6 @@ func getflag() {
 
 func main() {
 
-	getargs()
+	//getargs()
 	getflag()
 }
