@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -69,31 +68,37 @@ func selects() {
 
 var Db *sqlx.DB
 
-func init() {
+func initDB() (err error) {
 	//数据库信息
+	//username:password@tcp(ip:port)/dbname
 	dsn := "root:123456@tcp(127.0.0.1:3306)/mydb"
 	//连接数据库
-	db, err := sqlx.Open("mysql", dsn)
-	if err != nil {
-		fmt.Println("数据库连接失败，检查dsn，err="，err)
+	db, err1 := sqlx.Open("mysql", dsn)
+	if err1 != nil {
+		fmt.Println("dsn格式错误，err=", err1)
 		return
+
 	}
 
-	//尝试连接数据库
-	err=db.Ping()
-	if err!=nil {
-		fmt.Println("数据库ping失败，err=",err)
+	// 尝试连接数据库
+	err2 := db.Ping()
+	if err2 != nil {
+		fmt.Println("数据库ping失败，err=", err2)
 		return
+
 	}
 
 	fmt.Println("数据库链接成功")
-
-
 	Db = db
-
+	return
 }
 
 func main() {
+	err := initDB()
+	if err != nil {
+		fmt.Println("init db failed")
+	}
+
 	defer Db.Close()
 	// insert()
 	// update()

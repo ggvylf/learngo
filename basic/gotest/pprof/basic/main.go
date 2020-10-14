@@ -13,7 +13,7 @@ func logicCode() {
 	for {
 		select {
 		case v := <-c:
-			fmt.Println("recv from.chan,value=%v\n", v)
+			 
 		default:
 		}
 	}
