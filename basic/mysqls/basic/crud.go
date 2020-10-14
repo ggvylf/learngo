@@ -70,11 +70,25 @@ func selects() {
 var Db *sqlx.DB
 
 func init() {
-	db, err := sqlx.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/mydb")
+	//数据库信息
+	dsn := "root:123456@tcp(127.0.0.1:3306)/mydb"
+	//连接数据库
+	db, err := sqlx.Open("mysql", dsn)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Println("数据库连接失败，检查dsn，err="，err)
+		return
 	}
+
+	//尝试连接数据库
+	err=db.Ping()
+	if err!=nil {
+		fmt.Println("数据库ping失败，err=",err)
+		return
+	}
+
+	fmt.Println("数据库链接成功")
+
+
 	Db = db
 
 }
