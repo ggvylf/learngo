@@ -73,31 +73,37 @@ func initDB() (err error) {
 	//username:password@tcp(ip:port)/dbname
 	dsn := "root:123456@tcp(127.0.0.1:3306)/mydb"
 	//连接数据库
-	db, err1 := sqlx.Open("mysql", dsn)
-	if err1 != nil {
-		fmt.Println("dsn格式错误，err=", err1)
+	//这里不要使用:= 不然创建的就是临时变量，而不是全局变量，会报空指针的问题
+	Db, err = sqlx.Open("mysql", dsn)
+	if err != nil {
+		fmt.Println("dsn格式错误，err=", err)
 		return
 
 	}
 
 	// 尝试连接数据库
-	err2 := db.Ping()
-	if err2 != nil {
-		fmt.Println("数据库ping失败，err=", err2)
+	err = Db.Ping()
+	if err != nil {
+		fmt.Println("数据库ping失败，err=", err)
 		return
 
 	}
 
-	fmt.Println("数据库链接成功")
-	Db = db
+	//最大连接数
+	Db.SetMaxOpenConns(200)
+	//最大空闲链接
+	Db.SetMaxIdleConns(1000)
+
 	return
 }
 
 func main() {
 	err := initDB()
 	if err != nil {
-		fmt.Println("init db failed")
+		fmt.Println("数据库初始化失败")
 	}
+
+	Db.QueryRow()
 
 	defer Db.Close()
 	// insert()
