@@ -17,6 +17,7 @@ type Person struct {
 }
 
 func insert() {
+	// 执行语句
 	result, err := Db.Exec("insert into person(name,age,rmb,gender,birthday) values(?,?,?,?,?)", "peter", 11, 444, true, 19930101)
 	if err != nil {
 		fmt.Println(err)
