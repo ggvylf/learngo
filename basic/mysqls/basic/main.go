@@ -81,6 +81,7 @@ func initDB() (err error) {
 		return
 
 	}
+	defer Db.Close()
 
 	// 尝试连接数据库
 	err = Db.Ping()
@@ -104,9 +105,6 @@ func main() {
 		fmt.Println("数据库初始化失败")
 	}
 
-	Db.QueryRow()
-
-	defer Db.Close()
 	// insert()
 	// update()
 	//delete()
