@@ -74,10 +74,25 @@ import (
 //方法4  使用context
 var wg sync.WaitGroup
 
-func f(ctx context.Context) {
+func f1(ctx context.Context) {
+	defer wg.Done()
+	go f2(ctx)
+	for {
+		fmt.Println("f1")
+		time.Sleep(500 * time.Millisecond)
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+	}
+
+}
+
+func f2(ctx context.Context) {
 	defer wg.Done()
 	for {
-		fmt.Println("hehe")
+		fmt.Println("f2")
 		time.Sleep(500 * time.Millisecond)
 		select {
 		case <-ctx.Done():
@@ -89,13 +104,15 @@ func f(ctx context.Context) {
 }
 
 func main() {
-	// 创建一个context
+	// 创建一个context、
+	//context.WithCancel()返回一个带有新Done chan的父节点的副本。当调用cancel()或父上下文的Done chan时，将关闭返回上下文的Done chan。
+	//取消该context将释放与其相关的资源
 	ctx, cancel := context.WithCancel(context.Background())
 
 	wg.Add(1)
-	go f(ctx)
+	go f1(ctx)
 	time.Sleep(3 * time.Second)
-	//执行cancel方法，往ctx.Down()这个chan中传递信号
+	//执行cancel方法，往ctx.Down()这个chan中传递信号，通知gorutine结束
 	cancel()
 	wg.Wait()
 }
