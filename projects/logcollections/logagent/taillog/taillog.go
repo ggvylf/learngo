@@ -1,6 +1,10 @@
 package taillog
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/hpcloud/tail"
+)
 
 var (
 	tailObj *tail.Tail

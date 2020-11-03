@@ -1,6 +1,7 @@
 package logagent
 
 import (
+	"gopkg.in/ini.v1"
 	"fmt"
 
 	"github.com/ggvylf/learngo/projects/logcollections/logagent/kafka"
@@ -8,6 +9,20 @@ import (
 )
 
 func run() {
+	//读取配置文件
+	configfile:="./config.ini"
+	cfg,err:=ini.Load(configfile)
+	if err!=nil {
+		fmt.Println("load config file failed,err=",err)
+		os.Exit(1)
+	}
+
+
+	
+
+
+
+
 	//读取日志
 	for {
 		select {
