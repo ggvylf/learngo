@@ -17,7 +17,7 @@ func Init(addrs []string, err error) {
 
 }
 
-func SednToKafka(topic, data string) {
+func SednToKafka(cfg.Section("kafka").Key("topic"), data string) {
 	//构造消息
 	msg := &sarama.ProducerMessage{}
 	msg.Topic = topic

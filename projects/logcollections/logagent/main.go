@@ -1,4 +1,4 @@
-package logagent
+package main
 
 import (
 	"gopkg.in/ini.v1"
@@ -9,19 +9,6 @@ import (
 )
 
 func run() {
-	//读取配置文件
-	configfile:="./config.ini"
-	cfg,err:=ini.Load(configfile)
-	if err!=nil {
-		fmt.Println("load config file failed,err=",err)
-		os.Exit(1)
-	}
-
-
-	
-
-
-
 
 	//读取日志
 	for {
@@ -39,8 +26,19 @@ func run() {
 
 func main() {
 
+	//读取配置文件
+	configfile:="./config.ini"
+	cfg,err:=ini.Load(configfile)
+	if err!=nil {
+		fmt.Println("load config file failed,err=",err)
+		os.Exit(1)
+	}
+
+
+
+
 	//初始化kafka
-	kafkaddr := []string{"127.0.0.1:9092"}
+	kafkaddr := []string{cfg.Section("kafka").Key("address")}
 	err := kafka.Init(kafkaddr)
 	if err != nil {
 		fmt.Printf("init kafka failed,err=%v\n", err)
@@ -48,8 +46,7 @@ func main() {
 	}
 
 	//初始化taillog
-	filename := "./a.log"
-	err = taillog.Init(filename)
+	err = taillog.Init(cfg.Section("taillog").Key("path"))
 	if err != nil {
 		fmt.Printf("init tail file failed,err=%v\n", err)
 		return
