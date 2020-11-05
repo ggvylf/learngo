@@ -1,6 +1,10 @@
 package kafka
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/Shopify/sarama"
+)
 
 var (
 	client sarama.SyncProducer
@@ -17,11 +21,11 @@ func Init(addrs []string, err error) {
 
 }
 
-func SednToKafka(cfg.Section("kafka").Key("topic"), data string) {
+func SendToKafka(topic, data string) {
 	//构造消息
 	msg := &sarama.ProducerMessage{}
 	msg.Topic = topic
-	msg.Value = sarama.StringEncodeer(data)
+	msg.Value = sarama.StringEncoder(data)
 
 	pid, offset, err := client.SendMessage(msg)
 	if err != nil {

@@ -27,6 +27,6 @@ func Init(fileName string) {
 	return
 }
 
-func ReadChan() <-chan *tail.Line {
+func ReadChan() *tail.Line {
 	return <-tailObj.Lines
 }
