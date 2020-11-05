@@ -10,7 +10,7 @@ var (
 	tailObj *tail.Tail
 )
 
-func Init(fileName string) {
+func Init(fileName string) (err error) {
 	config := tail.Config{
 		ReOpen:    true,
 		Follow:    true,
@@ -19,14 +19,15 @@ func Init(fileName string) {
 		Poll:      true,
 	}
 
-	tailObj, err := tail.TailFile(fileName, config)
+	tailObj, err = tail.TailFile(fileName, config)
 	if err != nil {
 		fmt.Println("tail file failed,err=", err)
 		return
 	}
+	fmt.Println(tailObj)
 	return
 }
 
-func ReadChan() *tail.Line {
-	return <-tailObj.Lines
+func ReadChan() <-chan *tail.Line {
+	return tailObj.Lines
 }
