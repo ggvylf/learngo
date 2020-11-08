@@ -5,17 +5,16 @@ import (
 	"fmt"
 	"time"
 
-	"go.etcd.io/etcd/clientv3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func main() {
 	//建立连接
 	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   []string{"192.168.56.11:2379"},
+		Endpoints:   []string{"127.0.0.1:2379"},
 		DialTimeout: 5 * time.Second,
 	})
 
-	//错误处理
 	if err != nil {
 		if err == context.DeadlineExceeded {
 			fmt.Println("context deadline")
@@ -26,9 +25,31 @@ func main() {
 		return
 	}
 
-	fmt.Println("connect succ")
+	fmt.Println("connect etcd success")
 	//关闭连接
 	defer cli.Close()
+
+	//put
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	_, err := cli.Put(ctx, "hehe", "haha")
+	cancel()
+	if err != nil {
+		fmt.Println("put key to etcd failed,err=", err)
+		return
+	}
+
+	//get
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	resp, err := cli.GET("hehe")
+	cancel()
+	if err != nil {
+		fmt.Println("get key from etcd failed,err=", err)
+		return
+	}
+
+	for _, ev := range resp.Kvs {
+		fmt.Printf("key=%v,value=%v\n", ev.Key, ev.Value)
+	}
 
 	// //使用clientv3.WithPrevKV()参数，获取上一次的值
 	// putResp, err := cli.Put(context.TODO(), "/hehe", "lala", clientv3.WithPrevKV())
@@ -63,44 +84,4 @@ func main() {
 	// 	}
 	// }
 
-	//创建一个租约
-	lease := clientv3.NewLease(cli)
-
-	//指定租约时间为10s
-	leaseGrantResp, err := lease.Grant(context.TODO(), 10)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	//获取租约id
-	leaseId := leaseGrantResp.ID
-
-	//创建kv子集
-	kv := clientv3.NewKV(cli)
-
-	//写入etcd，指定租约
-	putResp, err := kv.Put(context.TODO(), "/hehe", "haha", clientv3.WithLease(leaseId))
-	if err != nil {
-
-		fmt.Println(err)
-	}
-
-	fmt.Println(putResp.Header)
-
-	//获取key的时候指定超时
-	for {
-		getResp, err := kv.Get(context.TODO(), "/hehe", clientv3.WithLease(leaseId))
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		if getResp.Count == 0 {
-			fmt.Println("lease is timeout")
-		} else {
-			fmt.Println("leaseing ")
-		}
-
-		time.Sleep(time.Second)
-
-	}
 }
