@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ggvylf/learngo/projects/logcollections/logagent/conf"
+	"github.com/ggvylf/learngo/projects/logcollections/logagent/etcd"
 	"github.com/ggvylf/learngo/projects/logcollections/logagent/kafka"
 	"github.com/ggvylf/learngo/projects/logcollections/logagent/taillog"
 	"gopkg.in/ini.v1"
@@ -14,6 +15,11 @@ import (
 var (
 	cfg = new(conf.AppConf)
 )
+
+type LogEntry struct {
+	Path  string `json:"path"`
+	Topic string `json:"topic`
+}
 
 func run() {
 
@@ -50,12 +56,16 @@ func main() {
 		return
 	}
 
-	//初始化taillog
-	err = taillog.Init(cfg.TailConf.FileName)
+	//初始化etcd
+	err = etcd.Init([]string(cfg.EtcdConf.Address))
 	if err != nil {
-		fmt.Printf("init tail file failed,err=%v\n", err)
+		fmt.Printf("init etcd failed,err=%v\n", err)
 		return
 	}
+
+	//从etcd中获取log信息
+	logEntryConf,err:=etcd.GetConf()
+	//watch配置项的拜年话
 
 	run()
 }
