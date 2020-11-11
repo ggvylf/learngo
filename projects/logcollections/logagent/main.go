@@ -57,14 +57,14 @@ func main() {
 	}
 
 	//初始化etcd
-	err = etcd.Init([]string(cfg.EtcdConf.Address))
+	err = etcd.Init([]string(cfg.EtcdConf.Address), cfg.EtcdConf.Timeout)
 	if err != nil {
 		fmt.Printf("init etcd failed,err=%v\n", err)
 		return
 	}
 
 	//从etcd中获取log信息
-	logEntryConf,err:=etcd.GetConf()
+	logEntryConf, err := etcd.GetConf(cfg.EtcdConf.Key)
 	//watch配置项的拜年话
 
 	run()

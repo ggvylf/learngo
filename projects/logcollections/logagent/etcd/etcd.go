@@ -27,8 +27,8 @@ func Init(addr string) (err error) {
 }
 
 
-func GetConf(key string) (logEntryConf []*LogEntry,err error)  {
-	ctx,cancel=context.WithTimeout(context context.Background(),time.Second)
+func GetConf(key string,timeout int) (logEntryConf []*LogEntry,err error)  {
+	ctx,cancel=context.WithTimeout(context context.Background(),timeout)
 	resp,err:=client.Get(ctx,key)
 	cancel()
 	if err!=nil {
