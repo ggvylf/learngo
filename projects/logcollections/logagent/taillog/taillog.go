@@ -6,11 +6,24 @@ import (
 	"github.com/hpcloud/tail"
 )
 
-var (
-	tailObj *tail.Tail
-)
+//一个日志收集的任务的实例
+type TailTask struct {
+	path     string `json:"path"`
+	topic    string `json:"topic`
+	instance *tail.Tail
+}
 
-func Init(fileName string) (err error) {
+func NewTailTask(path,topic string) (tailObj *tail.TailTask) {
+	tailObj=&TailTask {
+		path:path,
+		topic:topic
+	}
+	tailObj.Init(tailObj.path)
+	return
+}
+
+
+func (t *TailTask) Init() {
 	config := tail.Config{
 		ReOpen:    true,
 		Follow:    true,
@@ -19,15 +32,16 @@ func Init(fileName string) (err error) {
 		Poll:      true,
 	}
 
-	tailObj, err = tail.TailFile(fileName, config)
+	t.instance, err = tail.TailFile(t.path, config)
 	if err != nil {
 		fmt.Println("tail file failed,err=", err)
-		return
+
 	}
-	fmt.Println(tailObj)
-	return
+
+
+
 }
 
-func ReadChan() <-chan *tail.Line {
-	return tailObj.Lines
+func (t *TailTask) ReadChan() <-chan *tail.Line {
+	return t.instance.Lines
 }

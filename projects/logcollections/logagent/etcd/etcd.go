@@ -12,6 +12,11 @@ var (
 	client *clientv3.Client
 )
 
+type LogEntry struct {
+	Path string `json:"path"`
+	Topic string `json:"topic"`
+}
+
 func Init(addr string) (err error) {
 	cli, err = clientv3.New(clientv3.Config{
 		Endpoints:   []string(addr),
