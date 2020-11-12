@@ -13,17 +13,18 @@ type TailTask struct {
 	instance *tail.Tail
 }
 
+//工厂模式，新建一个task实例
 func NewTailTask(path,topic string) (tailObj *tail.TailTask) {
 	tailObj=&TailTask {
 		path:path,
 		topic:topic
 	}
-	tailObj.Init(tailObj.path)
+	tailObj.init(tailObj.path)
 	return
 }
 
 
-func (t *TailTask) Init() {
+func (t *TailTask) init() {
 	config := tail.Config{
 		ReOpen:    true,
 		Follow:    true,
@@ -39,9 +40,27 @@ func (t *TailTask) Init() {
 	}
 
 
+	//发送日志到kafka
+	go t.run()
+
 
 }
 
 func (t *TailTask) ReadChan() <-chan *tail.Line {
 	return t.instance.Lines
+}
+
+
+// 发送到kafka
+func (t *TailTask) run() {
+	
+	for {
+		select {
+		case line := <-t.instance.Lines:
+			kafka.SentToKafka(logEntry.topic, line.Text)
+		default:
+			time.Sleep(time.Second)
+		}
+	}
+
 }

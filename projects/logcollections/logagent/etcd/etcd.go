@@ -31,7 +31,7 @@ func Init(addr string) (err error) {
 
 }
 
-
+//从etcd中获取文件和topic列表
 func GetConf(key string,timeout int) (logEntryConf []*LogEntry,err error)  {
 	ctx,cancel=context.WithTimeout(context context.Background(),timeout)
 	resp,err:=client.Get(ctx,key)

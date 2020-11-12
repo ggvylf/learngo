@@ -63,28 +63,8 @@ func main() {
 		return
 	}
 
-	//从etcd中获取log信息
-	logEntryConf, err := etcd.GetConf(cfg.EtcdConf.Key)
-
-	//循环收集日志发送到kafka
-	for _, logEntry := range logEntryConf {
-		tsk := taillog.NewTailTask(logEntry.Path, logEntry.Topic)
-		tsk.ReadChan()
-
-		for {
-			select {
-			case line := <-tailObj.Lines:
-				kafka.SentToKafka(logEntry.topic, line)
-			default:
-				time.Sleep(time.Second)
-			}
-		}
-
-		//发送到kafka
-		kafka.SentToKafka()
-		return
-
-	}
+	//收集日志发往kafka
+	taillog.Init(logEntryConf)
 
 	run()
 }
