@@ -28,7 +28,11 @@ func main() {
 	}
 
 	//链式操作，需要在对应的func中返回操作的对象
-	put1, err := client.Index().Index("user").BodyJson(p1).Do(context.Background())
+	// 创建的document为 /user/go/
+	put1, err := client.Index().Index("user").
+		Type("go").
+		BodyJson(p1).
+		Do(context.Background())
 
 	if err != nil {
 		fmt.Println("put key to index failed,err=", err)
