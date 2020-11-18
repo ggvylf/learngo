@@ -8,19 +8,16 @@ import (
 	"gopkg.in/ini.v1"
 )
 
-var (
-	cfg = new(config.LogTransfer)
-)
-
 func main() {
 
 	//加载配置文件
-
-	err := ini.MapTo(cfg, "./config/config.ini")
+	var cfg config.LogTransfer
+	err := ini.MapTo(&cfg, "./config/config.ini")
 	if err != nil {
 		fmt.Println("init config failed,err=", err)
 		os.Exit(0)
 	}
+	fmt.Println(cfg)
 
 	//初始化kafka
 	//初始化es

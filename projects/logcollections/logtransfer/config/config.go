@@ -1,8 +1,8 @@
 package config
 
 type LogTransfer struct {
-	KafkaCfg
-	EsCfg
+	KafkaCfg `ini:"kafka"`
+	EsCfg    `ini:"es"`
 }
 
 type KafkaCfg struct {
