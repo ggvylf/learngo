@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ggvylf/learngo/projects/logcollections/logagent/kafka"
 	"github.com/ggvylf/learngo/projects/logcollections/logtransfer/config"
 	"gopkg.in/ini.v1"
 )
@@ -11,8 +12,8 @@ import (
 func main() {
 
 	//加载配置文件
-	var cfg config.LogTransfer
-	err := ini.MapTo(&cfg, "./config/config.ini")
+	var cfg = new(config.LogTransfer)
+	err := ini.MapTo(cfg, "./config/config.ini")
 	if err != nil {
 		fmt.Println("init config failed,err=", err)
 		os.Exit(0)
@@ -20,7 +21,18 @@ func main() {
 	fmt.Println(cfg)
 
 	//初始化kafka
+	err = kafka.Init([]strings{cfg.KafkaConf.Address}, cfg.KafkaConf.Topic)
+	if err != nil {
+		fmt.Println("init kafka failed, err=", err)
+		return
+	}
+
 	//初始化es
+	err := es.Init(cfg.EsConf.Address)
+	if err != nil {
+		fmt.Println("init es failed,err=", err)
+	}
+
 	//从kafka中读取数据
 	//写入到es中
 }
