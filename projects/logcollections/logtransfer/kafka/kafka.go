@@ -1,10 +1,16 @@
 package kafka
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/Shopify/sarama"
+	"github.com/ggvylf/learngo/projects/logcollections/logtransfer/es"
 )
+
+type LogData struct {
+	data string `json:"data"`
+}
 
 func Init(addrs []string, topic string) (err error) {
 	//初始化consumer
@@ -27,12 +33,23 @@ func Init(addrs []string, topic string) (err error) {
 			return
 		}
 		defer pc.AsyncClose()
+		
 		// 异步从每个分区消费信息
 		go func(sarama.PartitionConsumer) {
 			for msg := range pc.Messages() {
-				fmt.Printf("Partition:%d Offset:%d Key:%v Value:%v", msg.Partition, msg.Offset, msg.Key, msg.Value)
+				fmt.Printf("Partition:%d Offset:%d Key:%v Value:%v\n", msg.Partition, msg.Offset, msg.Key, msg.Value)
 			}
 			//发送给es
+			ld:=LogData{
+				data:string(msg.Value)
+			}
+			//把消息的内容写入ld中
+			err = json.Unmarshal(mgs.Value, ld)
+			if err != nil {
+				fmt.Println("unmarahal failed ,err=", err)
+				continue
+			}
+			es.SendToES(topic, ld)
 
 		}(pc)
 	}
