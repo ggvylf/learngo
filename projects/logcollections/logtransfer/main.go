@@ -22,7 +22,7 @@ func main() {
 	fmt.Println(cfg)
 
 	//初始化es
-	err := es.Init(cfg.EsConf.Address)
+	err := es.Init(cfg.EsConf.Address, cfg.EsConf.ChanSize, cfg.EsConf.ChanCount)
 	if err != nil {
 		fmt.Println("init es failed,err=", err)
 	}

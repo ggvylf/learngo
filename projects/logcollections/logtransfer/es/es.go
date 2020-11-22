@@ -8,11 +8,18 @@ import (
 	"github.com/olivere/elastic"
 )
 
+
 var (
 	client *elastic.Client
+	ch chan *LogData
 )
 
-func Init(addr string) (err error) {
+type LogData struct {
+	Topic string `json:"topic"`
+	Data string `json:"data"`
+}
+
+func Init(addr string,chansize int,chancount int) (err error) {
 	//如果es地址不带http://，填充
 	if !strings.HasPrefix(addr, "http://") {
 		addr = "http://" + addr
@@ -24,23 +31,46 @@ func Init(addr string) (err error) {
 		fmt.Println("connect to es failed,err=", err)
 		return
 	}
+	//连接建立厚就可以往chan中写入数据了
+	ch=make(chan *LogData,chansize)
+
+	for i:=0;i<chancount;i++ {
+		go SendToESChan()
+	}
+
+
 	return
 
 }
+
+//发送数据到es的chan中
+func SendToESChan(msg *LogData) {
+
+	ch <- msg
+}
+
 
 //发送数据到es
-func SendToES(indexStr string, data interface{}) {
+func SendToES() {
 
-	//链式操作，需要在对应的func中返回操作的对象
-	// 创建的document为 /user/go/
-	put1, err := client.Index().Index(indexStr).
-		Type("go").
-		BodyJson(p1).
-		Do(context.Background())
+	for (
+		select {
+		case msg :=<- ch : 
+				put1, err := client.Index().Index(msg.Topic).
+				Type("go").
+				BodyJson(msg).
+				Do(context.Background())
 
-	if err != nil {
-		fmt.Println("put key to index failed,err=", err)
-		return
-	}
-	return
+			if err != nil {
+				fmt.Println("put key to index failed,err=", err)
+				continue
+			}
+
+default:
+	time.Sleep(time.Second)
+		}
+	)
+
+
 }
+

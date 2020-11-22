@@ -8,9 +8,7 @@ import (
 	"github.com/ggvylf/learngo/projects/logcollections/logtransfer/es"
 )
 
-type LogData struct {
-	data string `json:"data"`
-}
+
 
 func Init(addrs []string, topic string) (err error) {
 	//初始化consumer
@@ -40,8 +38,9 @@ func Init(addrs []string, topic string) (err error) {
 				fmt.Printf("Partition:%d Offset:%d Key:%v Value:%v\n", msg.Partition, msg.Offset, msg.Key, msg.Value)
 			}
 			//发送给es
-			ld:=LogData{
-				data:string(msg.Value)
+			ld:=es.LogData{
+				Topic: topic
+				Data:string(msg.Value)
 			}
 			//把消息的内容写入ld中
 			err = json.Unmarshal(mgs.Value, ld)
@@ -49,7 +48,7 @@ func Init(addrs []string, topic string) (err error) {
 				fmt.Println("unmarahal failed ,err=", err)
 				continue
 			}
-			es.SendToES(topic, ld)
+			es.SendToESChan(&ld)
 
 		}(pc)
 	}

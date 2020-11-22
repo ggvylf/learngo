@@ -11,5 +11,7 @@ type KafkaCfg struct {
 }
 
 type EsCfg struct {
-	Address string `ini:"address"`
+	Address    string `ini:"address"`
+	ChanSize   int    `ini:"chansize"`
+	ChanCounts int    `ini: "nums"`
 }
