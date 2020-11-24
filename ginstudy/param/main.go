@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -39,11 +40,18 @@ func main() {
 		c.String(http.StatusOK, name+age+"\n")
 	})
 
-	r.Run(":8888")
-
 	//form表单
 	r.POST("/form", func(c *gin.Context) {
+		type1 := c.DefaultPostForm("type", "alert")
+		//单个值
+		username := c.PostForm("username")
+		passwd := c.PostForm("passwd")
+		//多选框
+		hobbys := c.PostFormArray("hobby")
 
+		c.String(http.StatusOK, fmt.Sprintf("type1=%s, username=%s,passwd=%s,hobbys=%s\n", type1, username, passwd, hobbys))
 	})
+
+	r.Run(":8888")
 
 }
