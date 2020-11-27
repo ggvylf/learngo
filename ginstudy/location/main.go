@@ -11,6 +11,7 @@ func main() {
 
 	//HTTP重定向
 	r.GET("/index", func(c *gin.Context) {
+		//301重定向
 		c.Redirect(http.StatusMovedPermanently, "https://www.baidu.com")
 	})
 
@@ -18,6 +19,7 @@ func main() {
 	r.GET("/a", func(c *gin.Context) {
 		//改写请求的uri
 		c.Request.URL.Path = "/b"
+
 		//路由继续处理后续请求
 		r.HandleContext(c)
 	})

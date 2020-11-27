@@ -1,4 +1,4 @@
-module github.com/ggvylf/learngo/ginstudy/param
+module github.com/ggvylf/learngo/ginstudy
 
 go 1.15
 
