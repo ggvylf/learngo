@@ -27,10 +27,14 @@ func (m *MemorySessionMgr) CreateSession() (session Session, err error) {
 	m.rwlock.Lock()
 	defer m.rwlock.Unlock()
 
-	id, err := uuid.NewV4()
+	id, err := uuid.NewRandom()
 	if err != nil {
 		return
 	}
+
+	sessionId := id.String()
+
+	session = NewMemorySession(sessionId)
 
 	return
 }
