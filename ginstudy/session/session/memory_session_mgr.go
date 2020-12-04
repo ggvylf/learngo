@@ -1,6 +1,7 @@
 package session
 
 import (
+	"errors"
 	"sync"
 
 	"github.com/google/uuid"
@@ -36,5 +37,21 @@ func (m *MemorySessionMgr) CreateSession() (session Session, err error) {
 
 	session = NewMemorySession(sessionId)
 
+	//把session根据sessinId加入到session的map中
+	m.sessionMap[sessionId] = session
+
 	return
+}
+func (m *MemorySessionMgr) Get(sessionId string) (session Session, err error) {
+
+	m.rwlock.Lock()
+	defer m.rwlock.Unlock()
+
+	session, ok := m.sessionMap[sessionId]
+	if !ok {
+		err = errors.New("session not exists")
+		return
+	}
+	return
+
 }
