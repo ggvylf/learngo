@@ -2,6 +2,7 @@ package session
 
 import (
 	"encoding/json"
+	"errors"
 	"sync"
 
 	"github.com/gomodule/redigo/redis"
@@ -9,7 +10,7 @@ import (
 
 const (
 	SessionFlagNone = iota
-	SeesionFlagModify
+	SessionFlagModify
 )
 
 type RedisSession struct {
@@ -39,18 +40,18 @@ func (r *RedisSession) Set(key string, value interface{}) {
 	defer r.rwlock.Unlock()
 
 	r.sessionMap[key] = value
-	r.flag = SeesionFlagModify
+	r.flag = SessionFlagModify
 
 	return
 
 }
 
 //存储数据到redis
-func (r *RedisSession) Save(key string) {
+func (r *RedisSession) Save(key string) (err error) {
 	r.rwlock.Lock()
 	defer r.rwlock.Unlock()
 
-	if r.flag != SeesionFlagModify {
+	if r.flag != SessionFlagModify {
 		return
 	}
 
@@ -62,11 +63,62 @@ func (r *RedisSession) Save(key string) {
 
 	//获取redis连接
 	conn := r.pool.Get()
+	//保存kv到redis中
 	_, err = conn.Do("SET", r.sessionId, string(data))
 	if err != nil {
 		return
 	}
+	//保存后修改状态
+	r.flag = SessionFlagNone
 
 	return
 
+}
+
+func (r *RedisSession) Get(key string) (result interface{}, err error) {
+	r.rwlock.Lock()
+	defer r.rwlock.Unlock()
+
+	//先判断内存中是否有
+	if r.flag == SessionFlagNone {
+		result, ok := r.sessionMap[key]
+		if !ok {
+			err := errors.New("key not in memory")
+			return
+		}
+
+	}
+	return
+
+}
+func (r *RedisSession) LoadFromRedis(key string) (err error) {
+	conn := r.pool.Get()
+	result, err := conn.Do("GET", r.sessionId)
+	if err != nil {
+		return
+	}
+
+	//转字符串
+	data, err := redis.String(result, err)
+	if err != nil {
+		return
+	}
+
+	//把data重新写入内存
+	err = json.Unmarshal([]byte(data), r.sessionMap)
+
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (r *RedisSession) Del(key string) (err error) {
+	r.rwlock.Lock()
+	defer r.rwlock.Unlock()
+
+	r.flag = SessionFlagModify
+	delete(r.sessionMap, key)
+
+	return
 }

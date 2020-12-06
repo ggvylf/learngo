@@ -13,7 +13,7 @@ type MemorySessionMgr struct {
 }
 
 //工厂函数
-func NewMemorySessionMap() *MemorySessionMgr {
+func NewMemorySessionMgr() *MemorySessionMgr {
 	return &MemorySessionMgr{
 		sessionMap: make(map[string]Session, 1024),
 	}
