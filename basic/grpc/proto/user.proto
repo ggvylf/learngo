@@ -1,0 +1,38 @@
+//指定版本号
+syntax="proto3";
+
+//指定包名
+// package proto;
+option go_package = "../proto";
+
+
+//请求结构体
+message UserRequest {
+    string name=1;
+}
+
+
+//响应结构体
+message UserResponse {
+    int32 id =1;
+    string name=2;
+    int32 age=3;
+
+    //repdated是可变数组，go中会转成slice
+    repeated string hobby=4;
+}
+
+//定义方法
+service UserInfoService {
+
+    rpc GetUserInfo(UserRequest) returns (UserResponse){
+
+    } 
+}
+
+
+//这个会报错
+//protoc --go-grpc_out=. *.proto
+
+//这个正常
+//protoc --go_out=plugins=grpc:. *.proto
