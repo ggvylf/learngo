@@ -5,7 +5,7 @@ import (
 	"sort"
 )
 
-//map嵌套
+// map嵌套
 func muiltMap() {
 	var c map[int]map[int]string
 	c = make(map[int]map[int]string)
@@ -84,29 +84,119 @@ func switchMaps() {
 }
 
 func main() {
-	var a map[int]int
-	a = make(map[int]int, 10)
-	a[1] = 1
-	a[2] = 2
-	fmt.Println(a)
-	fmt.Println(len(a))
 
-	var b map[string]string = map[string]string{
-		"key1": "value1",
-		"key2": "vaule2",
+	//map初始化和map的长度
+	initandlen()
+
+	//判断map中的元素是否存在
+	iskeyexist()
+
+	//map遍历
+	rangemap()
+
+	//map的value是一个方法
+	mapvalueisfunc()
+
+	//map实现set
+	mapasset()
+
+	// muiltMap()
+	// sliceOfMap()
+	// sortOfMap()
+	// switchMaps()
+
+}
+
+func initandlen() {
+
+	m1 := map[int]int{1: 1, 2: 2}
+	fmt.Printf("len is %d\n", len(m1))
+
+	m2 := map[int]int{}
+	m2[1] = 1
+	fmt.Printf("len is %d\n", len(m2))
+
+	//注意 map不能用cap统计容量
+	m3 := make(map[int]int, 10)
+	fmt.Printf("len is %d\n", len(m3))
+}
+
+func iskeyexist() {
+	//key不存在的时候 默认返回key类型的nil值
+	m1 := map[int]int{}
+	m2 := map[int]string{}
+	fmt.Printf("m1[1]=%+v,type is %T\n", m1[1], m1[1])
+	fmt.Printf("m2[1]=%+v,type is %T\n", m2[1], m2[1])
+
+	//判断key是否存在
+	m1[1] = 3
+	if v, ok := m1[1]; ok {
+		fmt.Printf("key 1 is exists,value=%v\n", v)
+	} else {
+		fmt.Println("key 2 is not exist")
 	}
 
-	fmt.Println(b)
-
-	val, ok := a[2]
-	if ok {
-		fmt.Println(val)
-
+	if v, ok := m1[2]; ok {
+		fmt.Printf("key 2 is exists,value=%v\n", v)
+	} else {
+		fmt.Println("key 2 is not exist")
 	}
 
-	muiltMap()
-	sliceOfMap()
-	sortOfMap()
-	switchMaps()
+}
 
+func rangemap() {
+	m1 := map[string]int{
+		"one": 1,
+		"two": 2,
+	}
+
+	for k, v := range m1 {
+		fmt.Printf("key is %s,value is %d\n", k, v)
+	}
+
+}
+
+func mapvalueisfunc() {
+
+	m := map[int]func(op int) int{}
+
+	m[1] = func(op int) int {
+		return op
+	}
+	m[2] = func(op int) int {
+		return op * op
+	}
+
+	m[3] = func(op int) int {
+		return op * op * op
+	}
+
+	fmt.Println(m[1](2), m[2](2), m[3](2))
+
+}
+
+func mapasset() {
+	//声明set map[type]bool
+	mySet := map[int]bool{}
+
+	//判断元素是否存在，只要判断value即可
+	mySet[1] = true
+	if mySet[1] {
+		fmt.Println("mySet[1] is exist")
+	} else {
+		fmt.Println("mySet[1] is not exist")
+	}
+
+	//set的长度
+	mySet[2] = true
+	fmt.Printf("mySet len is %d\n", len(mySet))
+
+	//删除元素
+	n := 1
+	delete(mySet, n)
+	if mySet[n] {
+		fmt.Printf("mySet[%d] is exist\n", n)
+	} else {
+		fmt.Printf("mySet[%d] is not exist\n", n)
+	}
 }

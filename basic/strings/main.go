@@ -5,6 +5,30 @@ import (
 	"strings"
 )
 
+func main() {
+
+	//包含字符串
+	contains()
+
+	//字符串的索引操作
+	index()
+
+	//大小写转换
+	upperlower()
+
+	//字符串的修剪
+	trim()
+
+	//字符串的分割
+	split()
+
+	//字符串数组元素之间加入分隔符
+	join()
+
+	//unicode和utf8的差异
+	unicodeandutf8()
+}
+
 func contains() {
 	str1 := "hello world"
 	str2 := "le"
@@ -110,11 +134,30 @@ func join() {
 
 }
 
-func main() {
-	contains()
-	index()
-	upperlower()
-	trim()
-	split()
-	join()
+func unicodeandutf8() {
+	str := "中"
+	fmt.Printf(" 中 len is %d\n", len(str))
+
+	//这里是rune切片
+	r := []rune(str)
+	fmt.Printf(" 中 after []rune  is %x\n", r)
+	fmt.Printf(" 中 after []rune len is %d\n", len(r))
+
+	// 遍历中文string 会自动转换成rune类型
+	s := "白日依山尽"
+	for _, v := range s {
+
+		//fmt.Printf("%c,%d\n", v, v)
+		//只使用第一个参数
+		fmt.Printf("%[1]c,%[1]d \n", v)
+	}
+
+	//这里是byte类型切片
+	b := []byte(str)
+	fmt.Printf(" 中 after []byes  is %x\n", b)
+	fmt.Printf(" 中 after []byes  len is %d\n", len(b))
+
+	fmt.Printf(" 中 unicode is %x\n", r[0])
+	fmt.Printf(" 中 utf8 is %x\n", str)
+
 }
