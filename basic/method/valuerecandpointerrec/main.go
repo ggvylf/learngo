@@ -14,12 +14,13 @@ func NewPerson(name string, age int) *Person {
 	}
 }
 
-//值接收者，传入的是值拷贝，通常用在不需要修改结构体数据的场景下
+// 值接收者，传入的是值拷贝，通常用在不需要修改结构体数据的场景下
+// 会做一次内存复制
 func (p Person) AddAge1() {
 	p.Age++
 }
 
-//指针接收者，可以修改结构体中的数据
+// 指针接收者，可以修改结构体中的数据
 func (p *Person) AddAge2() {
 	p.Age++
 }
