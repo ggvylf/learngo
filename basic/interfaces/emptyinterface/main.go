@@ -2,10 +2,10 @@ package main
 
 import "fmt"
 
-//空接口，任意类型都实现了空接口
+// 空接口，任意类型都实现了空接口 实际在用的时候需要断言
 type emptyinf interface{}
 
-//用法1： 空接口作为函数的参数
+// 用法1： 空接口作为函数的参数
 func printtype(e emptyinf) {
 	fmt.Printf("type is %T\n", e)
 }

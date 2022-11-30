@@ -1,9 +1,12 @@
-//类型断言
+// 类型断言
 package main
 
 import "fmt"
 
-type Coder struct{}
+type Worker interface {
+	Work()
+	Rest()
+}
 
 func (c *Coder) Work() {
 	fmt.Println("is working")
@@ -11,13 +14,13 @@ func (c *Coder) Work() {
 
 func (c *Coder) Rest() {
 	fmt.Println("is resting")
+
 }
 
-type Worker interface {
-	Work()
-	Rest()
-}
+type Coder struct{}
 
+// 空接口可以表示任何类型，在使用的时候需要通过类型断言，
+// 断言是true表示类型正确
 func Test(a interface{}) {
 	//断言，a是个int类型，如果不是int类型就走if流程
 	b, ok := a.(int)
