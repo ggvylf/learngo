@@ -71,7 +71,7 @@ import (
 // 		}
 // 	}
 
-//方法4  使用context
+// 方法4  使用context
 var wg sync.WaitGroup
 
 func f1(ctx context.Context) {
@@ -104,9 +104,10 @@ func f2(ctx context.Context) {
 }
 
 func main() {
-	// 创建一个context、
+	//创建一个context
 	//context.WithCancel()返回一个带有新Done chan的父节点的副本。当调用cancel()或父上下文的Done chan时，将关闭返回上下文的Done chan。
 	//取消该context将释放与其相关的资源
+
 	ctx, cancel := context.WithCancel(context.Background())
 
 	wg.Add(1)

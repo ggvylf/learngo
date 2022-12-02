@@ -10,7 +10,7 @@ func main() {
 	var once sync.Once
 	mych := make(chan bool)
 
-	//声明一个无参函数，用来被sync.Once执行
+	//声明一个无参函数，用来被sync.Once执行 该函数只执行一次
 	oncefunc := func() {
 		fmt.Println("once run ok")
 		mych <- true

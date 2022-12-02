@@ -63,7 +63,10 @@ func slowFunc(op int) int {
 func timeSpent(inner func(op int) int) func(op int) int {
 	return func(n int) int {
 		start := time.Now()
+
+		// 执行传入的函数
 		ret := inner(n)
+
 		fmt.Println("time spent:", time.Since(start).Seconds())
 		return ret
 	}

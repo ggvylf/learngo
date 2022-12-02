@@ -14,6 +14,8 @@ func main() {
 OUTER:
 	for {
 		//同时相应多个通道操作
+		// case操作是随机的，没有先后顺序
+
 		select {
 		case chanA <- 1:
 			fmt.Println("　write to chanA")
