@@ -8,7 +8,7 @@ import (
 type Cat struct{}
 type Dog struct{}
 
-//使用反射判断接口类型
+// 使用反射判断接口类型
 func ReflectType(x interface{}) {
 	//如何判断接口类型 1，类型断言 2. 反射
 	//接口=动态接口类型+对应动态接口类型的值
@@ -23,7 +23,7 @@ func ReflectType(x interface{}) {
 
 }
 
-//获取变量的类型
+// 获取变量的类型
 func GetType() {
 	ReflectType(3)
 	ReflectType([]int{1, 2, 3})
@@ -33,7 +33,7 @@ func GetType() {
 	ReflectType(d)
 }
 
-//通过反射获取接口对应类型的值
+// 通过反射获取接口对应类型的值
 func ReflectValue(x interface{}) {
 	infval := reflect.ValueOf(x)
 	fmt.Printf("接口反射值=%v,接口反射值的类型=%v\n", infval, infval.Kind())
@@ -56,12 +56,14 @@ func ReflectValue(x interface{}) {
 
 }
 
+// 获取实例对象的值和类型
 func GetValue() {
+	// float64类型要转换成float32类型
 	ReflectValue(3.33)
 	ReflectValue(123)
 }
 
-//通过反射修改变量的值，注意函数传递的是值的拷贝，必须传地址
+// 通过反射修改变量的值，注意函数传递的是值的拷贝，必须传地址
 func ReflectSetValue(x interface{}) {
 	//通过反射获取值
 	infval := reflect.ValueOf(x)
@@ -82,17 +84,23 @@ func ReflectSetValue(x interface{}) {
 }
 
 func SetValue() {
+
+	// int类型修改成200
+	// float64类型修改成4.4444
 	var a int32 = 123
 	var b float64 = 3.33
 
 	//函数是值的拷贝，必须传地址。
+	fmt.Println("a修改前值=", a)
 	ReflectSetValue(&a)
 	fmt.Println("a修改反射后的值=", a)
+
+	fmt.Println("b修改前值=", b)
 	ReflectSetValue(&b)
 	fmt.Println("b修改反射后的值=", b)
 }
 
-//IsNil()会判断变量持有的值是否为nil，注意变量的的类型必须是chan func interface map pointer slice之一，否则会painc
+// IsNil()会判断变量持有的值是否为nil，注意变量的的类型必须是chan func interface map pointer slice之一，否则会painc
 func ReflectIsNil() {
 	var a *int
 
@@ -102,7 +110,7 @@ func ReflectIsNil() {
 	// fmt.Println("int类型b的值是否为空=", reflect.ValueOf(b).IsNil())
 }
 
-//isVaild()会返回变量是否持有一个值，如果值是0则会返回false，此时该值除了IsVaild() String Kind以外的方法都活panic
+// isVaild()会返回变量是否持有一个值，如果值是0则会返回false，此时该值除了IsVaild() String Kind以外的方法都会panic
 func ReflectIsValid() {
 	type Person struct {
 		Name string
@@ -116,16 +124,18 @@ func ReflectIsValid() {
 		fmt.Println("存在字段Name")
 	}
 
-	//判断是否存在某个方法
+	//判断sturct否存在某个方法
 	p2 := struct{}{}
 	if reflect.ValueOf(p2).MethodByName("abc").IsValid() {
-		fmt.Println("存在acb方法")
+		fmt.Println("存在abc方法")
 	} else {
-		fmt.Println("不存在acb方法")
+		fmt.Println("不存在abc方法")
 	}
 
 	//判断map中是否存在key
 	k1 := map[int]int{1: 11, 2: 22, 3: 33}
+	fmt.Println(k1)
+
 	//这里要把int类型的转换为Value类型
 	if reflect.ValueOf(k1).MapIndex(reflect.ValueOf(4)).IsValid() {
 		fmt.Println("index为4的元素存在")

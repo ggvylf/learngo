@@ -5,11 +5,13 @@ import (
 	"reflect"
 )
 
+// 定义一个struct，并且添加tag
 type Student struct {
 	Name  string `json:"jsonname" xml:"xmlname"`
 	Score int    `json:"score"`
 }
 
+// 定义2个struct的方法
 func (s Student) Study(a, b int) {
 	str := "is study"
 	fmt.Println(str)
@@ -23,9 +25,11 @@ func (s Student) Sleep(a, b string) {
 	fmt.Println(a + b)
 }
 
+// 获取struct支持的方法
 func PrintMethod(x interface{}) {
 	xtype := reflect.TypeOf(x)
 	xvalue := reflect.ValueOf(x)
+
 	//获取方法个数
 	fmt.Println("结构体包含的方法个数=", xtype.NumMethod())
 
@@ -43,6 +47,7 @@ func PrintMethod(x interface{}) {
 	args = append(args, reflect.ValueOf(2))
 	strargs = append(strargs, reflect.ValueOf("2"))
 	strargs = append(strargs, reflect.ValueOf("4"))
+
 	//调用方法
 	xvalue.Elem().Method(0).Call(strargs)
 	xvalue.Elem().Method(1).Call(args)
@@ -52,7 +57,7 @@ func PrintMethod(x interface{}) {
 func main() {
 	s1 := Student{"tom", 99}
 	stureftype := reflect.TypeOf(s1)
-	
+
 	//打印struct的名称和类型
 	fmt.Printf("struct的名称=%v,struct的类型=%v\n", stureftype.Name(), stureftype.Kind())
 
