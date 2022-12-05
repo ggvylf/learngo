@@ -65,6 +65,7 @@ func GetValue() {
 
 // 通过反射修改变量的值，注意函数传递的是值的拷贝，必须传地址
 func ReflectSetValue(x interface{}) {
+
 	//通过反射获取值
 	infval := reflect.ValueOf(x)
 
