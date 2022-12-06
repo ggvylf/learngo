@@ -5,7 +5,10 @@ import (
 	"fmt"
 )
 
-//指定了struct字段的tag，格式为kv对,多个tag用空格分割
+// 指定了struct字段的tag，格式为kv对,多个tag用空格分割
+// 内部是通过反射reflect来实现的
+// 在高qps场景下 reflect的效率并不高
+
 type Person struct {
 	Name string `json:"my_name"  db:"name"  xml:”name“`
 	age  int    `json:"my_age"`
@@ -18,7 +21,7 @@ func NewPerson(name string, age int) *Person {
 	}
 }
 
-//使用自定义方法来返回私有变量的值拷贝
+// 使用自定义方法来返回私有变量的值拷贝
 func (p *Person) GetAge() int {
 	return p.age
 }
